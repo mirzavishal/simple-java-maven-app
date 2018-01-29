@@ -1,4 +1,10 @@
 node {
+
+    try {
+		git credentialsId: 'SSH_DEV_CRED_ID' url: "git@github.com:mirzavishal/simple-java-maven-app.git", branch: "master"
+    } catch (Exception e) {
+		throw e;
+	}
 	def mvnHome = tool 'Maven-Vishal'
     def sonarHome = tool 'sonar-Scanner'
     bat '${mvnHome}/bin/mvn -B -DskipTests clean '
