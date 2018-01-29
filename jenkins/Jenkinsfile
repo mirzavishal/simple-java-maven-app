@@ -2,37 +2,23 @@ node {
 	def mvnHome = tool 'Maven-Vishal'
     def sonarHome = tool 'sonar-Scanner'
 
-    stages {
-        stage('Build') {
-            steps { 
-                bat '${mvnHome}/bin/mvn -B -DskipTests clean package'
-                echo 'Build Success'
-            }
+    stage('Build') {
+            bat '${mvnHome}/bin/mvn -B -DskipTests clean package'
+            echo 'Build Success'
+    }
+    stage('Test') {
+            bat '${mvnHome}/bin/mvn test'
+            echo 'Test Success'
+        
         }
-        stage('Test') {
-            steps {
-                bat '${mvnHome}/bin/mvn test'
-                echo 'Test Success'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                    echo 'POST'
-                }
-            }
-        }
-        stage('Code Analysis'){
-            steps{
-                bat '${sonarHome}/sonar-scanner -Dsonar.projectKey=SimpleMaven -Dsonar.projectName=SimpleMaven  -Dsonar.projectVersion=1.0  -Dsonar.sources=. '
-                echo 'Code Analysis Success'
+    }
+    stage('Code Analysis'){
+            bat '${sonarHome}/sonar-scanner -Dsonar.projectKey=SimpleMaven -Dsonar.projectName=SimpleMaven  -Dsonar.projectVersion=1.0  -Dsonar.sources=. '
+            echo 'Code Analysis Success'
 
-            }
-        }
-        stage('Deliver') {
-            steps {
-                bat './jenkins/scripts/deliver.sh'
-                echo 'Delivery Success'
-            }
-        }
+    }
+    stage('Deliver') {
+            bat './jenkins/scripts/deliver.sh'
+            echo 'Delivery Success'
     }
 }
