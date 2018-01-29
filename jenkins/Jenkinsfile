@@ -4,28 +4,34 @@ node {
 
     stages {
         stage('Build') {
-            steps {
+            steps { 
                 bat '${mvnHome}/bin/mvn -B -DskipTests clean package'
+                echo 'Build Success'
             }
         }
         stage('Test') {
             steps {
                 bat '${mvnHome}/bin/mvn test'
+                echo 'Test Success'
             }
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
+                    echo 'POST'
                 }
             }
         }
         stage('Code Analysis'){
             steps{
                 bat '${sonarHome}/sonar-scanner -Dsonar.projectKey=SimpleMaven -Dsonar.projectName=SimpleMaven  -Dsonar.projectVersion=1.0  -Dsonar.sources=. '
+                echo 'Code Analysis Success'
+
             }
         }
         stage('Deliver') {
             steps {
                 bat './jenkins/scripts/deliver.sh'
+                echo 'Delivery Success'
             }
         }
     }
