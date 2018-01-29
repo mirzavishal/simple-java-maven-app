@@ -1,18 +1,16 @@
-pipeline {
-	agent any
-	tools {
-		maven 'Maven-Vishal'
-        sonarScanner 'sonar-Scanner' 
-	}
+node {
+	def mvnHome = tool 'Maven-Vishal'
+    def sonarHome = tool 'sonar-Scanner'
+
     stages {
         stage('Build') {
             steps {
-                bat 'mvn -B -DskipTests clean package'
+                bat '${mvnHome}/bin/mvn -B -DskipTests clean package'
             }
         }
         stage('Test') {
             steps {
-                bat 'mvn test'
+                bat '${mvnHome}/bin/mvn test'
             }
             post {
                 always {
@@ -22,7 +20,7 @@ pipeline {
         }
         stage('Code Analysis'){
             steps{
-                bat 'sonar-scanner -Dsonar.projectKey=SimpleMaven -Dsonar.projectName=SimpleMaven  -Dsonar.projectVersion=1.0  -Dsonar.sources=. '
+                bat '${sonarHome}/sonar-scanner -Dsonar.projectKey=SimpleMaven -Dsonar.projectName=SimpleMaven  -Dsonar.projectVersion=1.0  -Dsonar.sources=. '
             }
         }
         stage('Deliver') {
